@@ -1,30 +1,71 @@
+from collections import UserString
+import click
 import pandas as pd
 from flask.cli import with_appcontext
-from consolemenu import SelectionMenu
-from flask import current_app
-import numpy as np
-#from app.models import ModelParams
-from app.utils import format_data_books #, house_results_to_dataframe, regression
+#from getpass import getpass
+#from werkzeug.security import generate_password_hash
+#from consolemenu import SelectionMenu
+
 from app.db import db
-from app.models import Books
-import json
+from app.utils import (
+    format_data_user,
+    format_data_rates,
+    format_data_books,
+    format_data_ratings,
+    format_data_to_read,
+    format_data_tags,
+    format_data_goodread_book)
+
+from app.models import (
+    Book_tags,
+    User,
+    Rates,
+    Books,
+    Ratings,
+    To_read,
+    Tags,
+    Goodread_book,
+    Book_tags)
+
 
 
 @click.command("insert-db")
 @with_appcontext
 def insert_db():
     """Insère les données nécessaire à l'utilisation de l'application"""
-    # On récupère les données du fichier CSV dans un dataframe
-    data_books = pd.read_csv("books.csv")
+    # On récupère les données des fichiers CSV dans des dataframe
+    # data_housing = pd.read_csv("housing.csv")
+    book_data = pd.read_csv("books.csv")
+    ratings_data = pd.read_csv("ratings.csv")
+    tags_data = pd.read_csv("tags.csv")
+    to_read_data = pd.read_csv("to_read.csv")
+    book_tags_data = pd.read_csv("book_tags.csv")
+
     # On format les données (int64 pour les champs) afin de les préparer à l'insertion
-    data_books = format_data_books(data_books)
+    # data_housing = format_data_housing(data_housing)
+    user = format_data_user(to_read_data, ratings_data)
+    rates = format_data_rates(ratings_data)
+    books = format_data_books(book_data)
+    ratings = format_data_ratings(ratings_data)
+    to_read = format_data_to_read(to_read_data)
+    tags = format_data_tags(tags_data)
+    goodread_book = format_data_goodread_book(book_data)
+    book_tags = book_tags_data
+
     # On insère les données dans la table House
-    Books.insert_from_pd(data_books)
+    User.insert_user_from_pd(user)
+    Rates.insert_rates_from_pd(rates)
+    Books.insert_books_from_pd(books)
+    Ratings.insert_ratings_from_pd(ratings)
+    To_read.insert_to_read_from_pd(to_read)
+    Tags.insert_tags_from_pd(tags)
+    Goodread_book.insert_goodreads_book_from_pd(goodread_book)
+    Book_tags.insert_book_tag_from_pd(book_tags)
+
+    # House.insert_from_pd(data_housing)
     print("Données dans la BDD insérées")
-    
-    
+
+
     # On confirme tous les changements pour la transaction
     db.session.commit()
     print("Tout a été inséré dans la base de données !")
-
-    

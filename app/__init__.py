@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 import json
 import os
 from app.db import db
-from app.services import login_manager, csrf
+#from app.services import login_manager, csrf
 from app.db_commands import insert_db
 
 def create_app(test_config=None):
@@ -58,19 +58,19 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # On importe les models afin que flask_migrate les connaisse
-    from app.models import Books
+    #from app.models import Books
 
     # On initialise l'outil de migration
     migrate.init_app(app, db)
 
     # On ajoute la protection CSRF pour toutes les requetes POST
-    csrf.init_app(app)
+    #csrf.init_app(app)
 
     # On ajoute la commande "flask insert-db" à l'application
     app.cli.add_command(insert_db)
 
-     # instancie le service de login qui va manager l'aspect login/logout/cookie/session
-    login_manager.init_app(app)
+    # instancie le service de login qui va manager l'aspect login/logout/cookie/session
+    #login_manager.init_app(app)
 
     # L'application est prete, on la retourne
     return app
