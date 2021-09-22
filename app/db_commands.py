@@ -35,11 +35,11 @@ def insert_db():
     """Insère les données nécessaire à l'utilisation de l'application"""
     # On récupère les données des fichiers CSV dans des dataframe
     # data_housing = pd.read_csv("housing.csv")
-    book_data = pd.read_csv("books.csv")
-    ratings_data = pd.read_csv("ratings.csv")
-    tags_data = pd.read_csv("tags.csv")
-    to_read_data = pd.read_csv("to_read.csv")
-    book_tags_data = pd.read_csv("book_tags.csv")
+    book_data = pd.read_csv("data/books.csv")
+    ratings_data = pd.read_csv("data/ratings.csv")
+    tags_data = pd.read_csv("data/tags.csv")
+    to_read_data = pd.read_csv("data/to_read.csv")
+    book_tags_data = pd.read_csv("data/book_tags.csv")
 
     # On format les données (int64 pour les champs) afin de les préparer à l'insertion
     # data_housing = format_data_housing(data_housing)
@@ -59,7 +59,7 @@ def insert_db():
     Ratings.insert_ratings_from_pd(ratings)
     To_read.insert_to_read_from_pd(to_read)
     Tags.insert_tags_from_pd(tags)
-    Goodread_book.insert_goodreads_book_from_pd(goodread_book)
+    Goodread_book.insert_goodread_book_from_pd(goodread_book)
     Book_tags.insert_book_tag_from_pd(book_tags)
 
     # House.insert_from_pd(data_housing)

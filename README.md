@@ -8,7 +8,7 @@ Projet de recommandation de livres pour un libraire
 
 # Installation
 ```console
-git clone https://github.com/Recomandation-System-Simplon/Librairie_recommandation.git
+git clone https://github.com/Recomandation-System-Simplon/api_recommandation.git
 cd Librairie_recommandation
 ```
 
@@ -43,6 +43,7 @@ cp exemple_config.json instance/config.json
 ```
 Ensuite exécuter les commandes de configuration pour la BDD:
 ```console
+flask db init
 flask db upgrade
 flask insert-db
 ```
