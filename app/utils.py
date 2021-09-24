@@ -13,10 +13,8 @@ import json
 
 def format_data_user(to_read_data, ratings_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         to_read_data,ratings_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -33,10 +31,8 @@ def format_data_user(to_read_data, ratings_data: pd.DataFrame):
 
 def format_data_rates(ratings_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         ratings_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -48,22 +44,20 @@ def format_data_rates(ratings_data: pd.DataFrame):
     rates = rates.drop(columns="index")
     rates = rates.reset_index()
     rates = rates.rename(columns={"index": "ratings_id"})
+    rates = rates.rename(columns={"rating": "ratings"})
+
     rates.ratings_id = rates.ratings_id + 1
 
-    colonne_int = ["ratings_id","rating"]
+    colonne_int = ["ratings_id","ratings"]
 
     for col in colonne_int:
         rates[col] = rates[col].astype("Int64")
     return rates
-    
-
 
 def format_data_books(book_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         book_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -89,31 +83,27 @@ def format_data_books(book_data: pd.DataFrame):
 
     for i in liste_colonne_drop:
         books = books.drop(columns=i)
-    books = books.dropna()
 
     colonne_int = ["book_id","goodreads_book_id","isbn13","original_publication_year"]
 
     for col in colonne_int:
         books[col] = books[col].astype("Int64")
 
-    books = books.dropna()
-    books = books.rename(columns={"isbn13": "ISBN"})
+    books = books.rename(columns={"isbn13": "isbn"})
 
     return books
 
 
 def format_data_ratings(ratings_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         ratings_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
-    ratings = ratings_data.rename(columns={"rating": "rating_id"})
+    ratings = ratings_data.rename(columns={"rating": "ratings_id"})
     
-    colonne_int = ["user_id","book_id","rating_id"]
+    colonne_int = ["user_id","book_id","ratings_id"]
 
     for col in colonne_int:
         ratings[col] = ratings[col].astype("Int64")
@@ -122,10 +112,8 @@ def format_data_ratings(ratings_data: pd.DataFrame):
 
 def format_data_to_read(to_read_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         to_read_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -141,13 +129,10 @@ def format_data_to_read(to_read_data: pd.DataFrame):
 
     return to_read
 
-
 def format_data_tags(tags_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         tags (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -159,10 +144,8 @@ def format_data_tags(tags_data: pd.DataFrame):
 
 def format_data_goodread_book(book_data: pd.DataFrame):
     """Permet de formatter les champs du dataframe afin de les conformer au type de la BDD
-
     Args:
         book_data (pd.DataFrame): dataframe provenant du fichier csv
-
     Returns:
         pd.DataFrame: Le dataframe converti
     """
@@ -177,5 +160,12 @@ def format_data_goodread_book(book_data: pd.DataFrame):
     return goodread_book
 
 
+def format_data_book_tag(book_tags_data: pd.DataFrame):
+    book_tags = book_tags_data
+    book_tags = book_tags.reset_index()
+    book_tags = book_tags.rename(columns={"index":"id"})
+    book_tags.id = book_tags.id +1
+    book_tags.tag_id = book_tags.tag_id + 1
+    book_tags = book_tags.drop(columns={"count"})
 
-
+    return book_tags

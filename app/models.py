@@ -1,5 +1,9 @@
 from pandas import DataFrame
 from app.db import db
+from sqlalchemy import Column, Integer, VARCHAR, ForeignKey, DECIMAL, BIGINT
+from sqlalchemy.orm import relationship
+
+
 
 
 class User(db.Model):
@@ -8,9 +12,9 @@ class User(db.Model):
     """
 
     __tablename__ = "user"
-    user_id = db.Column("user_id", db.Integer, primary_key=True)
+    user_id = Column("user_id", Integer, primary_key=True)
 
-    
+
     def insert_user_from_pd(user: DataFrame):
         user.to_sql("user", if_exists="append", con=db.engine, index=False)
 
@@ -21,8 +25,8 @@ class Rates(db.Model):
     """
 
     __tablename__ = "rates"
-    ratings_id = db.Column("ratings_id", db.Integer, primary_key=True)
-    rating = db.Column("rating", db.Integer)
+    ratings_id = Column("ratings_id", Integer, primary_key=True)
+    rating = Column("ratings", Integer)
 
 
 
@@ -36,14 +40,18 @@ class Books(db.Model):
     """
 
     __tablename__ = "books"
-    book_id = db.Column("book_id", db.Integer, primary_key=True)
-    goodreads_book_id = db.Column("goodreads_book_id", db.Integer, db.ForeignKey("goodread_book.goodread_book_id"))
-    best_book_id = db.Column("best_book_id", db.Integer)
-    isbn = db.Column("isbn", db.Integer)
-    authors = db.Column("authors", db.String)
-    original_publication_year = db.Column("original_publication_year", db.DECIMAL)
-    original_title = db.Column("original_title", db.String)
-    title = db.Column("title", db.String)
+    book_id = Column("book_id", Integer, primary_key=True)
+    goodreads_book_id = Column(
+        "goodreads_book_id", Integer, ForeignKey("goodreads_book.goodreads_book_id")
+    )
+    best_book_id = Column("best_book_id", Integer)
+    isbn = Column("isbn", BIGINT)
+    authors = Column("authors", VARCHAR)
+    original_publication_year = Column("original_publication_year", DECIMAL)
+    original_title = Column("original_title", VARCHAR)
+    title = Column("title", VARCHAR)
+
+
 
     def insert_books_from_pd(books: DataFrame):
         books.to_sql("books", if_exists="append", con=db.engine, index=False)
@@ -55,14 +63,13 @@ class Ratings(db.Model):
     """
 
     __tablename__ = "ratings"
-    id = db.Column("id", db.Integer, primary_key=True)
-    user_id = db.Column("user_id", db.Integer, db.ForeignKey("user.user_id"))
-    book_id = db.Column("book_id", db.Integer, db.ForeignKey("books.book_id"))
-    rating_id = db.Column("ratings_id", db.Integer, db.ForeignKey("rates.ratings_id"))
+    id = Column("id", Integer, primary_key=True)
+    user_id = Column("user_id", Integer, ForeignKey("user.user_id"))
+    book_id = Column("book_id", Integer, ForeignKey("books.book_id"))
+    rating_id = Column("ratings_id", Integer, ForeignKey("rates.ratings_id"))
 
     def insert_ratings_from_pd(ratings: DataFrame):
         ratings.to_sql("ratings", if_exists="append", con=db.engine, index=False)
-
 
 class To_read(db.Model):
     """Table to_read de la BDD, il est possible de faire des requete sql
@@ -70,9 +77,9 @@ class To_read(db.Model):
     """
 
     __tablename__ = "to_read"
-    to_read_id = db.Column("to_read_id", db.Integer, primary_key=True)
-    user_id = db.Column("user_id", db.Integer, db.ForeignKey("user.user_id"))
-    book_id = db.Column("book_id", db.Integer, db.ForeignKey("books.book_id"))
+    to_read_id = Column("to_read_id", Integer, primary_key=True)
+    user_id = Column("user_id", Integer, ForeignKey("user.user_id"))
+    book_id = Column("book_id", Integer, ForeignKey("books.book_id"))
 
     def insert_to_read_from_pd(to_read: DataFrame):
         to_read.to_sql("to_read", if_exists="append", con=db.engine, index=False)
@@ -85,9 +92,10 @@ class Tags(db.Model):
     """
 
     __tablename__ = "tags"
-    tags_id = db.Column("tag_id", db.Integer, primary_key=True)
-    tag_name = db.Column("tag_name", db.String)
+    tags_id = Column("tag_id", Integer, primary_key=True)
+    tag_name = Column("tag_name", VARCHAR)
 
+    book_tag = relationship("Book_tags")
     def insert_tags_from_pd(tags: DataFrame):
         tags.to_sql("tags", if_exists="append", con=db.engine, index=False)
 
@@ -97,12 +105,12 @@ class Goodread_book(db.Model):
     avec goodread_book.query (voir la doc de flask-sqlalchemy)
     """
 
-    __tablename__ = "goodread_book"
-    goodread_book_id = db.Column("goodread_book_id", db.Integer, primary_key=True)
+    __tablename__ = "goodreads_book"
+    goodreads_book_id = Column("goodreads_book_id", Integer, primary_key=True)
 
     def insert_goodread_book_from_pd(goodread_book: DataFrame):
         goodread_book.to_sql(
-            "goodread_book", if_exists="append", con=db.engine, index=False
+            "goodreads_book", if_exists="append", con=db.engine, index=False
         )
 
 
@@ -112,11 +120,11 @@ class Book_tags(db.Model):
     """
 
     __tablename__ = "book_tags"
-    id = db.Column("id", db.Integer, primary_key=True)
-    goodread_book_id = db.Column(
-        "goodread_book_id", db.Integer, db.ForeignKey("goodread_book.goodread_book_id")
+    id = Column("id", Integer, primary_key=True)
+    goodreads_book_id = Column(
+        "goodreads_book_id", Integer, ForeignKey("goodreads_book.goodreads_book_id")
     )
-    tags_id = db.Column("tag_id", db.Integer, db.ForeignKey("tags.tag_id"))
+    tags_id = Column("tag_id", Integer, ForeignKey("tags.tag_id"))
 
     def insert_book_tag_from_pd(book_tags: DataFrame):
         book_tags.to_sql("book_tags", if_exists="append", con=db.engine, index=False)

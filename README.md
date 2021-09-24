@@ -44,6 +44,7 @@ cp exemple_config.json instance/config.json
 Ensuite exécuter les commandes de configuration pour la BDD:
 ```console
 flask db init
+flask db migrate
 flask db upgrade
 flask insert-db
 ```

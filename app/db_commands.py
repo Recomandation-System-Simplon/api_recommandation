@@ -9,23 +9,27 @@ from flask.cli import with_appcontext
 from app.db import db
 from app.utils import (
     format_data_user,
-    format_data_rates,
     format_data_books,
     format_data_ratings,
-    format_data_to_read,
     format_data_tags,
-    format_data_goodread_book)
+    format_data_to_read,
+    format_data_goodread_book,
+    format_data_rates,
+    format_data_book_tag)
+
+
+
 
 from app.models import (
-    Book_tags,
     User,
     Rates,
-    Books,
-    Ratings,
-    To_read,
     Tags,
+    Books,
     Goodread_book,
-    Book_tags)
+    Book_tags,
+    Ratings,
+    To_read)
+    
 
 
 
@@ -43,6 +47,7 @@ def insert_db():
 
     # On format les données (int64 pour les champs) afin de les préparer à l'insertion
     # data_housing = format_data_housing(data_housing)
+    
     user = format_data_user(to_read_data, ratings_data)
     rates = format_data_rates(ratings_data)
     books = format_data_books(book_data)
@@ -50,17 +55,18 @@ def insert_db():
     to_read = format_data_to_read(to_read_data)
     tags = format_data_tags(tags_data)
     goodread_book = format_data_goodread_book(book_data)
-    book_tags = book_tags_data
+    book_tags = format_data_book_tag(book_tags_data)
 
     # On insère les données dans la table House
     User.insert_user_from_pd(user)
     Rates.insert_rates_from_pd(rates)
-    Books.insert_books_from_pd(books)
-    Ratings.insert_ratings_from_pd(ratings)
-    To_read.insert_to_read_from_pd(to_read)
     Tags.insert_tags_from_pd(tags)
     Goodread_book.insert_goodread_book_from_pd(goodread_book)
-    Book_tags.insert_book_tag_from_pd(book_tags)
+    Book_tags.insert_book_tag_from_pd(book_tags) 
+    Books.insert_books_from_pd(books)
+    To_read.insert_to_read_from_pd(to_read)
+    Ratings.insert_ratings_from_pd(ratings)
+    
 
     # House.insert_from_pd(data_housing)
     print("Données dans la BDD insérées")
