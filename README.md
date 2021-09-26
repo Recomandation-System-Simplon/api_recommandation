@@ -48,3 +48,19 @@ flask db migrate
 flask db upgrade
 flask insert-db
 ```
+
+
+
+
+
+# Docker
+Si vous voulez vous éviter toutes les instructions précédentes, il est conseillé d'utiliser Docker.
+## Configuration
+Il faut configurer les variables environnements de Postgres dans un fichier .env à placer à la racine de l'application (renommer le fichier `.env.exemple` en `.env` suffit amplement) :
+```console
+cp .env.exemple .env
+```
+## Construire et exécuter l'image docker :
+```console
+docker-compose up -d
+```
