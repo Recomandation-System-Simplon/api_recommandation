@@ -53,8 +53,15 @@ flask insert-db
 
 
 
+
 # Docker
 Si vous voulez vous éviter toutes les instructions précédentes, il est conseillé d'utiliser Docker.
+
+## Liens vers un tutoriel d'installation de Docker
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-fr
+## Lien vers un tutoriel d'installation de Docker-compose
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-fr#:~:text=%C3%89tape%201%20-%20Installation%20de%20Docker%20Compose
+
 ## Configuration
 Il faut configurer les variables environnements de Postgres dans un fichier .env à placer à la racine de l'application (renommer le fichier `.env.exemple` en `.env` suffit amplement) :
 ```console
